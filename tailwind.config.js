@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         impar: {
+          400: "#AE276F",
           500: "#5F1478",
         },
       },
