@@ -9,38 +9,37 @@ type Props = {
 export function usePaginate(props: Props) {
   const { pageSize, page: _page, totalPage } = props
 
-  const [page, setPage] = useState(_page)
+  const [currentPage, setCurrentPage] = useState(_page)
 
+  const hasNextPage = useMemo(() => currentPage + 1 <= totalPage, [currentPage, totalPage])
+  const hasPreviewsPage = useMemo(() => currentPage - 1 >= 1, [currentPage])
 
   useEffect(() => {
-    setPage(_page)
+    setCurrentPage(_page)
   }, [_page])
-
-  const hasNextPage = useMemo(() => page + 1 <= totalPage, [page, totalPage])
-  const hasPreviewsPage = useMemo(() => page - 1 >= 1, [page])
 
   const next = useCallback((toLast = false) => {
     if (hasNextPage) {
-      setPage(p => toLast ? totalPage : p + 1)
+      setCurrentPage(p => toLast ? totalPage : p + 1)
     }
   }, [hasNextPage, totalPage])
 
   const back = useCallback((toFirst = false) => {
     if (hasPreviewsPage) {
-      setPage(p => toFirst ? 1 : p - 1)
+      setCurrentPage(p => toFirst ? 1 : p - 1)
     }
   }, [hasPreviewsPage])
 
 
   const go = useCallback((page: number) => {
     if (page >= 1 && totalPage <= totalPage) {
-      setPage(page)
+      setCurrentPage(page)
     }
   }, [totalPage])
 
 
   return {
-    currentPage: page,
+    currentPage,
     pageSize,
     totalPage,
     hasNextPage,
